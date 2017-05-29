@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      textarea {
+          width: 25em;
+          height: 30em;
+      }
+      #warn {
+          color: red;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.8.4/js-yaml.min.js"></script>
+    <script>
+      window.addEventListener("load", function() {
+        var modeInputs = document.getElementsByName("mode");
+        var modeIndicator = document.getElementById("modeIndicator");
+        var mode;
+        var input = document.getElementById("input");
+        var yaml = document.getElementById("yaml");
+        var json = document.getElementById("json");
+        var minify = document.getElementById("minify");
+        var warn = document.getElementById("warn");
+
+        var modeChange = function() {
+          modeInputs.forEach(function(modeInput) {
+            if (modeInput.checked) mode = modeInput.value;
+          });
+          modeIndicator.textContent = mode;
+        };
+
+        var processInput = function() {
+          var inputText = input.value;
+          var obj;
+          try {
+            if (mode === "JSON") {
+              obj = JSON.parse(inputText);
+            } else {
+              obj = jsyaml.safeLoad(inputText);
+            }
+          } catch (e) {
+            warn.textContent = "INPUT " + mode + " is not valid";
+            return;
+          }
+          warn.textContent = "";
+          yaml.value = jsyaml.safeDump(obj);
+          json.value = JSON.stringify(obj, null, "  ");
+          minify.value = JSON.stringify(obj);
+        };
+
+        modeInputs.forEach(function(modeInput) {
+          modeInput.addEventListener("click", function() {
+            modeChange();
+            processInput();
+          });
+        });
+        modeChange();
+
+        input.addEventListener("keyup", processInput);
+      });
+    </script>
+  </head>
+  <body>
+    <p>
+      <input id="yamlMode" name="mode" value="YAML" type="radio" checked>
+      <label for="yamlMode">YAML</label>
+      <input id="jsonMode" name="mode" value="JSON" type="radio">
+      <label for="jsonMode">JSON</label>
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>INPUT(<span id="modeIndicator"></span>)</th>
+          <th>YAML</th>
+          <th>JSON</th>
+          <th>minify</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><textarea id="input"></textarea></td>
+          <td><textarea id="yaml" readonly></textarea></td>
+          <td><textarea id="json" readonly></textarea></td>
+          <td><textarea id="minify" readonly></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      <span id="warn"></span>
+    </p>
+  </body>
+</html>
