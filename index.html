@@ -48,9 +48,9 @@
           }
           warn.textContent = "";
           warnDetail.textContent = "";
-          yaml.value = jsyaml.safeDump(obj);
           json.value = JSON.stringify(obj, null, "  ");
           minify.value = JSON.stringify(obj);
+          yaml.value = jsyaml.safeDump(obj);
         };
 
         modeInputs.forEach(function(modeInput) {
