@@ -22,6 +22,7 @@
         var json = document.getElementById("json");
         var minify = document.getElementById("minify");
         var warn = document.getElementById("warn");
+        var warnDetail = document.getElementById("warnDetail");
 
         var modeChange = function() {
           modeInputs.forEach(function(modeInput) {
@@ -40,10 +41,12 @@
               obj = jsyaml.safeLoad(inputText);
             }
           } catch (e) {
-            warn.textContent = "INPUT " + mode + " is not valid";
+            warn.textContent = "INPUT " + mode + " is not valid"
+            warnDetail.textContent = e.message;
             return;
           }
           warn.textContent = "";
+          warnDetail.textContent = "";
           yaml.value = jsyaml.safeDump(obj);
           json.value = JSON.stringify(obj, null, "  ");
           minify.value = JSON.stringify(obj);
@@ -63,10 +66,10 @@
   </head>
   <body>
     <p>
-      <input id="yamlMode" name="mode" value="YAML" type="radio" checked>
-      <label for="yamlMode">YAML</label>
-      <input id="jsonMode" name="mode" value="JSON" type="radio">
+      <input id="jsonMode" name="mode" value="JSON" type="radio" checked>
       <label for="jsonMode">JSON</label>
+      <input id="yamlMode" name="mode" value="YAML" type="radio">
+      <label for="yamlMode">YAML</label>
     </p>
     <table>
       <thead>
@@ -88,6 +91,9 @@
     </table>
     <p>
       <span id="warn"></span>
+    </p>
+    <p>
+      <span id="warnDetail"></span>
     </p>
   </body>
 </html>
